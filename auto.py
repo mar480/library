@@ -101,3 +101,84 @@ browser.get(pendingURL)
 # //*[@id="content"]/div/div[1]/div/table/tbody/tr[3]
 # //*[@id="content"]/div/div[1]/div/table/tbody/tr[4]
 
+###
+#print
+
+# def print(url):
+
+# 	#open reserved in librarika and order by date
+# 	#this way should avoid needing to write for more than one result page
+# 	browser.get(url)
+	
+# 	#return a count for rows and columns
+# 	rowElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr''')
+# 	rowLen = len(rowElem)
+# 	colElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[1]/th''')
+# 	logging.info('There are ' + str(rowLen) + ' rows.')
+# 	logging.info('There are ' + str(len(colElem)) + ' columns.')
+
+# 	#iterate through each row and check the start date of the top entry (today because we clicked on date earlier)
+# 	j = 2
+# 	count = 0
+# 	previoususername = 'blank'
+# 	isDupe = False
+
+# 	for i in range(j,rowLen+1):
+
+# 		#reopen and order by member
+# 		logging.info('j = ' + str(j))
+# 		browser.get(url)
+# 		memberElem = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[1]/th[5]/a''')
+# 		memberElem.click()
+
+# 		#find reserved date for each row on the table
+# 		reservedDate = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[''' + str(j) +  ''']/td[2]''').text.rstrip()
+# 		logging.info('Item '+ str(count) + ' reserved date is ' + reservedDate)
+
+# 		#create datetime.date.today formated to match librarika
+# 		today = (datetime.date.today().strftime('%b %d, %Y'))
+# 		logging.info('Item '+ str(count) + ' datetime today\'s date is ' + today)
+
+# 		#find current user's name
+# 		membername = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[''' + str(j) + ''']/td[5]''').text
+		
+# 		#check if current name matches previous name
+# 		isDupe = membername == previoususername
+
+# 		logging.info('username is ' + membername)
+# 		logging.info('previous username is ' + previoususername)
+# 		logging.info('Dupe is ' + str(isDupe))
+
+# 		#set previous username
+# 		previoususername = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[''' + str(j) + ''']/td[5]''').text
+		
+# 		#test compare selenium and datetime object and member name
+# 		#if today and not an additional booking for a previously printed member receipt
+# 		if reservedDate == today and isDupe == False:
+				
+# 			logging.info('Item ' + str(count) +" reserved date and datetime today match")
+
+# 			#click the receipt button
+# 			receiptElem = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr['''+ str(j) +''']/td[12]/a[2]''')
+# 			receiptElem.click()
+
+# 			#print receipt
+# 			browser.execute_script('window.print();')
+# 			logging.info('receipt printed')			
+# 			j += 1
+# 			count += 1
+			
+# 		else:
+# 			j+=1
+# 			if reservedDate != today:
+# 				logging.info('dates do not match')
+# 			elif membername == previoususername:
+# 				isDupe = True
+# 				logging.info('duplicate member name')
+# 			else:
+# 				logging.info('unspecified error')
+# 			continue
+
+# 	logging.info(str(count) + ' receipt printed.')
+# 	logging.info('PRINT LOOP CONCLUDED')
+			
