@@ -1,6 +1,9 @@
+import os
 import sys
+import time
 import logging
 import datetime
+#import pdfkit
 from datetime import timedelta
 import selenium
 import bs4 as bs
@@ -60,12 +63,14 @@ def reserve(url):
 
 	#open pending in librarika and order by date
 	#this way should avoid needing to write for more than one result page
+	logging.info('RESERVE PROCESS STARTED')
 	browser.get(url)
 	
 	#return a count for rows and columns
 	rowElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr''')
-	rowLen = len(rowElem)
 	colElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[1]/th''')
+	rowLen = len(rowElem)
+	colLen = len(colElem)
 	logging.info('There are ' + str(rowLen) + ' rows.')
 	logging.info('There are ' + str(len(colElem)) + ' columns.')
 
@@ -152,86 +157,101 @@ def issue(url):
 
 def print(url):
 
-	#open reserved in librarika and order by date
-	#this way should avoid needing to write for more than one result page
+	#open circulations/reserved in librarika and order by date
 	browser.get(url)
 	
 	#return a count for rows and columns
 	rowElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr''')
 	colElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[1]/th''')
-	logging.info('There are ' + str(len(rowElem)) + ' rows.')
+
+	logging.info('There are ' + str(len(rowElem) - 1) + ' rows.')
 	logging.info('There are ' + str(len(colElem)) + ' columns.')
 
-	#iterate through each row and check the start date of the top entry (today because we clicked on date earlier)
-	j = 2
-	count = 0
-	previoususername = 'blank'
-	isDupe = False
-	rowLen = len(rowElem)
-	memberNameList = []
+	#open page and order table by member
+	memberElem = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[1]/th[5]/a''')
+	memberElem.click()
 
+	#create variables
+	rownumber = 2 #rownumber
+	itemnumber = 0 #itemnumber
+	receiptnumber = 0 #receiptnumber
+	previoususername = 'blank' #sets first user name to blanks #the first iteration now doesn't cause an error when it looks above row 1 and can't find a row 0 
+	isDupe = False #checks if the user receipt has already been printed by only printing one receipt per user
+	rowLen = len(rowElem) + 1 #range upper limit = total rows + 1 because of range function upper limit
+	memberNameList = [] #list of members who have had receipts printed
+		
 
-	for i in range(2,rowLen+1):
+	#for every row in range (starting row number for xpath, total number of rows)
+	for i in range(2,rowLen):
 
-		#reopen and order by member
-		logging.info('j = ' + str(j))
-		browser.get(url)
-		memberElem = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[1]/th[5]/a''')
-		memberElem.click()
-
-		#find reserved date for each row on the table
-		reservedDate = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[''' + str(j) +  ''']/td[2]''').text.rstrip()
-		logging.info('Item '+ str(count) + ' reserved date is ' + reservedDate)
+		#increase item number
+		itemnumber +=1
+		#find and format reserved date for each row on the table
+		reservedDate = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[''' + str(i) +  ''']/td[2]''').text.rstrip()
+		logging.info('Item '+ str(itemnumber) + "'s reserved date is " + reservedDate)
 
 		#create datetime.date.today formated to match librarika
 		today = (datetime.date.today().strftime('%b %d, %Y'))
-		logging.info('Item '+ str(count) + ' datetime today\'s date is ' + today)
+		logging.info('Item '+ str(itemnumber) + "'s datetime today date is " + today)
 
-		#find current user's name
-		membername = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[''' + str(j) + ''']/td[5]''').text
+		#find this row's username
+		membername = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[''' + str(i) + ''']/td[5]''').text.rstrip()
 
-		#check if current name matches previous name
+		#check if current username matches the previously looped name # first loop the previous user is set to 'blank' as above
 		isDupe = membername == previoususername
 
-		logging.info('username is ' + membername)
-		logging.info('previous username is ' + previoususername)
-		logging.info('Dupe is ' + str(isDupe))
-
-		#set previous username
-		previoususername = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[''' + str(j) + ''']/td[5]''').text
+		logging.info('Current username is ' + membername)
+		logging.info('Previous username is ' + previoususername)
+		logging.info('Dupe is set to ' + str(isDupe))
 		
 		#test compare selenium and datetime object and member name
 		#if today and not an additional booking for a previously printed member receipt
 		if reservedDate == today and isDupe == False and membername not in memberNameList:
 				
-			logging.info('Item ' + str(count) +" reserved date and datetime today match")
+			logging.info('Item ' + str(itemnumber) +" reserved date and datetime today match")
+			logging.info('No receipt printed so far for ' + (membername))
 
-			#click the receipt button
-			receiptElem = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr['''+ str(j) +''']/td[12]/a[2]''')
+			#click on receipt button
+			receiptElem = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr['''+ str(i) +''']/td[12]/a[2]''')
 			receiptElem.click()
 
-			#print receipt
-			browser.execute_script('window.print();')
+			#print receipt and pause because otherwise it doesn't technically work for some reason?!
+			browser.execute_script('window.print();')	
+			time.sleep(3) # seconds
+
 			#add member name to member list
 			memberNameList.append(membername)
-			logging.info(memberNameList)
-			logging.info('receipt printed')			
-			j += 1
-			count += 1
-			browser.get('https://www.google.com')
+			logging.info(membername + ' added to memberNameList')
+			logging.info(membername + ' receipt(s) printed')			
+			
+			receiptnumber += 1
 			
 		else:
-			j+=1
+			
 			if reservedDate != today:
-				logging.info('dates do not match')
+				logging.info('This booking is not for today')
+			elif membername in memberNameList:
+				logging.info('Already in memberNameList')
 			elif membername == previoususername:
-				isDupe = True
-				logging.info('duplicate member name')
+				logging.info('Receipt already printed')
 			else:
-				logging.info('unspecified error')
+				logging.info('Unspecified error')
+				
 			continue
 
-	logging.info(str(count) + ' receipt printed.')
+
+		#reset the loop
+		browser.back()
+		browser.refresh()
+		logging.info(memberNameList)
+
+
+		# set previous username for next iteration
+		logging.info('Previous username was ' + previoususername)
+		previoususername = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[''' + str(i) + ''']/td[5]''').text.rstrip()
+		logging.info('Previous username is now ' + previoususername)
+
+	logging.info(str(receiptnumber) + ' receipt(s) printed.')
 	logging.info('PRINT LOOP CONCLUDED')
 			
 
@@ -243,8 +263,8 @@ pendingURL = 'https://cppdlibrary.librarika.com/media_bookings/index/Pending'
 reservedURL = 'https://cppdlibrary.librarika.com/media_bookings/index/Reserved'
 
 connect()
-# reserve(pendingURL)
-# issue(reservedURL)
+reserve(pendingURL)
+issue(reservedURL)
 print(reservedURL)
 
 browser.quit()
