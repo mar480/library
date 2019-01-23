@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import tkinter as tk
 import logging
 import datetime
 #import pdfkit
@@ -24,20 +25,16 @@ logging.info('Selenium version is ' + str(selenium.__version__) +'. Selenium suc
 logging.info('BS4 version is ' + bs.__version__ +'. BeautifulSoup successfully imported.')
 
 
-##############
-###SELENIUM###
-##############
-
-#instance of Chrome opens Librarika log in page
-browser = webdriver.Chrome(options = chrome_options)
-browser.implicitly_wait(10) # seconds
-browser.get("https://cppdlibrary.librarika.com/users/dashboard")
-
 #############
 ###CONNECT###
 #############
 
 def connect():
+	#instance of Chrome opens Librarika log in page
+	browser = webdriver.Chrome(options = chrome_options)
+	browser.implicitly_wait(10) # seconds
+	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
+	
 	#login credentials
 	username = 'admin@cppd.co.uk'
 	password = 'august1961'
@@ -59,26 +56,48 @@ def connect():
 
 #checks for today's pending items and reserves them 
 
-def reserve(url):
+def reserve():
+	#connect
+	#instance of Chrome opens Librarika log in page
+	browser = webdriver.Chrome(options = chrome_options)
+	browser.implicitly_wait(10) # seconds
+	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
+	logging.info('Connecting to Librarika')
+	#login credentials
+	username = 'admin@cppd.co.uk'
+	password = 'august1961'
+
+
+	#enters login credentials and clicks OK
+	userElem = browser.find_element_by_xpath('''//*[@id="UserUsername"]''')
+	userElem.clear()
+	userElem.send_keys(username)
+	passElem = browser.find_element_by_xpath('''//*[@id="UserPassword"]''')
+	passElem.clear()
+	passElem.send_keys(password)
+	submitElem = browser.find_element_by_xpath('''//*[@id="UserLoginForm"]/div[2]/div/input''')
+	submitElem.click()
+	logging.info('Successfully connected to Librarika')
 
 	#open pending in librarika and order by date
 	#this way should avoid needing to write for more than one result page
+	
 	logging.info('RESERVE PROCESS STARTED')
-	browser.get(url)
+	browser.get('https://cppdlibrary.librarika.com/media_bookings/index/Pending')
 	
 	#return a count for rows and columns
 	rowElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr''')
 	colElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[1]/th''')
-	rowLen = len(rowElem)
+	rowLen = len(rowElem) -1
 	colLen = len(colElem)
 	logging.info('There are ' + str(rowLen) + ' rows.')
 	logging.info('There are ' + str(len(colElem)) + ' columns.')
 
 	#iterate through each row and check the start date of the top entry (today because we clicked on date earlier)
-	count = 0
+	count = 1
 	for i in range(2,rowLen+1):
 		#reopen and order by date
-		browser.get(url)
+		browser.get('https://cppdlibrary.librarika.com/media_bookings/index/Pending')
 		dateHeadElem = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[1]/th[2]/a''')
 		dateHeadElem.click()
 		#find loan date for each row on the table
@@ -101,31 +120,51 @@ def reserve(url):
 			logging.info(str(count) + ' items moved from pending to reserved.')
 			logging.info('RESERVE LOOP CONCLUDED: loan date and datetime don\'t match')
 			break
-
+	browser.quit()
 ###########
 ###ISSUE###
 ###########
 
 #checks for yesterday's reserved items and issues them
 
-def issue(url):
+def issue():
+	#connect
+	#instance of Chrome opens Librarika log in page
+	browser = webdriver.Chrome(options = chrome_options)
+	browser.implicitly_wait(10) # seconds
+	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
+	logging.info('Connecting to Librarika')
+	#login credentials
+	username = 'admin@cppd.co.uk'
+	password = 'august1961'
 
+
+	#enters login credentials and clicks OK
+	userElem = browser.find_element_by_xpath('''//*[@id="UserUsername"]''')
+	userElem.clear()
+	userElem.send_keys(username)
+	passElem = browser.find_element_by_xpath('''//*[@id="UserPassword"]''')
+	passElem.clear()
+	passElem.send_keys(password)
+	submitElem = browser.find_element_by_xpath('''//*[@id="UserLoginForm"]/div[2]/div/input''')
+	submitElem.click()
+	logging.info('Successfully connected to Librarika')
 	#open reserved in librarika and order by date
 	#this way should avoid needing to write for more than one result page
-	browser.get(url)
+	browser.get('https://cppdlibrary.librarika.com/media_bookings/index/Reserved')
 	
 	#return a count for rows and columns
 	rowElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr''')
-	rowLen = len(rowElem)
+	rowLen = len(rowElem) -1
 	colElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[1]/th''')
-	logging.info('There are ' + str(rowLen) + ' rows.')
+	logging.info('There are ' + str(rowLen-1) + ' rows.')
 	logging.info('There are ' + str(len(colElem)) + ' columns.')
 
 	#iterate through each row and check the start date of the top entry (today because we clicked on date earlier)
-	count = 0
+	count = 1
 	for i in range(2,rowLen+1):
 		#reopen and order by date
-		browser.get(url)
+		browser.get('https://cppdlibrary.librarika.com/media_bookings/index/Reserved')
 		dateHeadElem = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[1]/th[2]/a''')
 		dateHeadElem.click()
 		#find reserved date for each row on the table
@@ -148,17 +187,38 @@ def issue(url):
 			logging.info(str(count) + ' items issued.')
 			logging.info('ISSUE LOOP CONCLUDED: issue date and datetime don\'t match')
 			break
-
+	browser.quit()
 ###########
 ###PRINT###
 ###########
 
 #checks for today's reserved items and prints the user receipt
 
-def print(url):
+def printReceipts():
+	#connect
+	#instance of Chrome opens Librarika log in page
+	browser = webdriver.Chrome(options = chrome_options)
+	browser.implicitly_wait(10) # seconds
+	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
+	logging.info('Connecting to Librarika')
+	#login credentials
+	username = 'admin@cppd.co.uk'
+	password = 'august1961'
 
+
+	#enters login credentials and clicks OK
+	userElem = browser.find_element_by_xpath('''//*[@id="UserUsername"]''')
+	userElem.clear()
+	userElem.send_keys(username)
+	passElem = browser.find_element_by_xpath('''//*[@id="UserPassword"]''')
+	passElem.clear()
+	passElem.send_keys(password)
+	submitElem = browser.find_element_by_xpath('''//*[@id="UserLoginForm"]/div[2]/div/input''')
+	submitElem.click()
+	logging.info('Successfully connected to Librarika')
+	
 	#open circulations/reserved in librarika and order by date
-	browser.get(url)
+	browser.get("https://cppdlibrary.librarika.com/media_bookings/index/Reserved")
 	
 	#return a count for rows and columns
 	rowElem = browser.find_elements_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr''')
@@ -217,32 +277,31 @@ def print(url):
 
 			#print receipt and pause because otherwise it doesn't technically work for some reason?!
 			browser.execute_script('window.print();')	
-			time.sleep(3) # seconds
+			time.sleep(1) # seconds
 
 			#add member name to member list
 			memberNameList.append(membername)
 			logging.info(membername + ' added to memberNameList')
-			logging.info(membername + ' receipt(s) printed')			
+			logging.info('RESULT: ' + membername + ' receipt(s) printed')			
 			
 			receiptnumber += 1
 			
 		else:
 			
 			if reservedDate != today:
-				logging.info('This booking is not for today')
+				logging.info('RESULT: This booking is not for today')
 			elif membername in memberNameList:
-				logging.info('Already in memberNameList')
+				logging.info('RESULT: Already in memberNameList')
 			elif membername == previoususername:
-				logging.info('Receipt already printed')
+				logging.info('RESULT: Receipt already printed')
 			else:
-				logging.info('Unspecified error')
+				logging.info('RESULT: Unspecified error')
 				
 			continue
 
 
 		#reset the loop
 		browser.back()
-		browser.refresh()
 		logging.info(memberNameList)
 
 
@@ -251,20 +310,36 @@ def print(url):
 		previoususername = browser.find_element_by_xpath('''//*[@id="content"]/div/div[1]/div/table/tbody/tr[''' + str(i) + ''']/td[5]''').text.rstrip()
 		logging.info('Previous username is now ' + previoususername)
 
-	logging.info(str(receiptnumber) + ' receipt(s) printed.')
+	logging.info('FINAL RESULT: '+str(receiptnumber) + ' receipt(s) printed.')
 	logging.info('PRINT LOOP CONCLUDED')
-			
+	browser.quit()	
 
 ###########
 ###MAIN####
 ###########
 
-pendingURL = 'https://cppdlibrary.librarika.com/media_bookings/index/Pending'
-reservedURL = 'https://cppdlibrary.librarika.com/media_bookings/index/Reserved'
+#############
+###TKINTER###
+#############
 
-connect()
-reserve(pendingURL)
-issue(reservedURL)
-print(reservedURL)
+root=tk.Tk()
 
-browser.quit()
+button_1 = tk.Button(root, text = 'Accept today\'s reservations', command = reserve)
+button_2 = tk.Button(root, text = 'Print today\'s receipts', command = printReceipts)
+button_3 = tk.Button(root, text = 'Issue yesterday\'s books', command = issue)
+
+img = tk.PhotoImage(file = 'img\\img.png')
+imglabel = tk.Label(root, image = img)
+imglabel.grid(column = 1, ipadx = 5, ipady= 5, rowspan = 3)
+
+button_1.grid(row = 0, padx = (10, 5), pady = (7, 5), ipadx = 5, ipady= 9, sticky = 'nsew')
+button_2.grid(row = 1, padx = (10, 5), pady = (5, 5), ipadx = 5, ipady= 9, sticky = 'nsew')
+button_3.grid(row = 2, padx = (10, 5), pady = (5, 7), ipadx = 5, ipady= 9, sticky = 'nsew')
+
+
+root.mainloop()
+#connect()
+#reserve()
+#issue()
+#print()
+

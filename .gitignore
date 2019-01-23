@@ -12,3 +12,5 @@ venv.bak/
 /Scripts/
 /tcl/
 geckodriver.txt
+libguiteset.py
+libgui.py
