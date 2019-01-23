@@ -31,7 +31,7 @@ logging.info('BS4 version is ' + bs.__version__ +'. BeautifulSoup successfully i
 
 def connect():
 	#instance of Chrome opens Librarika log in page
-	browser = webdriver.Chrome(options = chrome_options)
+	browser = webdriver.Chrome(executable_path=r'\chrome\chromedriver\chromedriver.exe',options = chrome_options)
 	browser.implicitly_wait(10) # seconds
 	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
 	
@@ -59,7 +59,7 @@ def connect():
 def reserve():
 	#connect
 	#instance of Chrome opens Librarika log in page
-	browser = webdriver.Chrome(options = chrome_options)
+	browser = webdriver.Chrome(options = chrome_options)	
 	browser.implicitly_wait(10) # seconds
 	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
 	logging.info('Connecting to Librarika')
@@ -130,7 +130,7 @@ def reserve():
 def issue():
 	#connect
 	#instance of Chrome opens Librarika log in page
-	browser = webdriver.Chrome(options = chrome_options)
+	browser = webdriver.Chrome(options = chrome_options)	
 	browser.implicitly_wait(10) # seconds
 	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
 	logging.info('Connecting to Librarika')
@@ -197,7 +197,7 @@ def issue():
 def printReceipts():
 	#connect
 	#instance of Chrome opens Librarika log in page
-	browser = webdriver.Chrome(options = chrome_options)
+	browser = webdriver.Chrome(options = chrome_options)	
 	browser.implicitly_wait(10) # seconds
 	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
 	logging.info('Connecting to Librarika')
@@ -335,7 +335,6 @@ imglabel.grid(column = 1, ipadx = 5, ipady= 5, rowspan = 3)
 button_1.grid(row = 0, padx = (10, 5), pady = (7, 5), ipadx = 5, ipady= 9, sticky = 'nsew')
 button_2.grid(row = 1, padx = (10, 5), pady = (5, 5), ipadx = 5, ipady= 9, sticky = 'nsew')
 button_3.grid(row = 2, padx = (10, 5), pady = (5, 7), ipadx = 5, ipady= 9, sticky = 'nsew')
-
 
 root.mainloop()
 #connect()

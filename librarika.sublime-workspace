@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"Q",
+				"QWidget"
+			],
+			[
+				"row",
+				"rowLen"
+			],
+			[
+				"mem",
+				"memberNameList"
+			],
+			[
+				"receipt",
+				"receiptnumber"
+			],
+			[
 				"current",
 				"currentURL"
 			],
@@ -14,10 +30,6 @@
 			[
 				"memberna",
 				"membername"
-			],
-			[
-				"mem",
-				"memberNameList"
 			],
 			[
 				"reserved",
@@ -50,10 +62,6 @@
 			[
 				"inf",
 				"INFO"
-			],
-			[
-				"row",
-				"rowLen"
 			],
 			[
 				"table",
@@ -107,35 +115,27 @@
 			"file": "main.py",
 			"settings":
 			{
-				"buffer_size": 9258,
+				"buffer_size": 13437,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "auto.py",
+			"file": "libgui.py",
 			"settings":
 			{
-				"buffer_size": 6408,
+				"buffer_size": 395,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/CPPD/Desktop/test.py",
+			"file": "/C/Users/CPPD/Desktop/gui.py",
 			"settings":
 			{
-				"buffer_size": 98,
+				"buffer_size": 3059,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "librarika.sublime-project",
-			"settings":
-			{
-				"buffer_size": 45,
-				"line_ending": "Unix"
 			}
 		}
 	],
@@ -171,10 +171,20 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/CPPD/Desktop/lib"
+		"/C/Users/CPPD/Desktop/lib",
+		"/C/Users/CPPD/Desktop/lib/img",
+		"/C/Users/CPPD/Desktop/lib/src",
+		"/C/Users/CPPD/Desktop/lib/src/main",
+		"/C/Users/CPPD/Desktop/lib/src/main/python"
 	],
 	"file_history":
 	[
+		"/C/Users/CPPD/Desktop/ui test.py",
+		"/C/Users/CPPD/Desktop/test.py",
+		"/C/Users/CPPD/Desktop/lib/libguitest.py",
+		"/C/Users/CPPD/Desktop/loop.py",
+		"/C/Users/CPPD/Desktop/lib/librarika.sublime-project",
+		"/C/Users/CPPD/Desktop/lib/auto.py",
 		"/C/Users/CPPD/Desktop/lib/logscript.py",
 		"/C/Users/CPPD/Desktop/lib/README.sublime-project",
 		"/C/Users/CPPD/Desktop/lib/README.md",
@@ -212,6 +222,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"QueueHandler",
 			"jan"
 		],
 		"highlight": true,
@@ -220,6 +231,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"j"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -239,23 +251,24 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9258,
+						"buffer_size": 13437,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								66,
-								66
+								1893,
+								1893
 							]
 						],
 						"settings":
 						{
+							"spell_check": true,
 							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 576.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -263,19 +276,19 @@
 				},
 				{
 					"buffer": 1,
-					"file": "auto.py",
+					"file": "libgui.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6408,
+						"buffer_size": 395,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4882,
-								5016
+								285,
+								354
 							]
 						],
 						"settings":
@@ -283,7 +296,7 @@
 							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1968.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -291,59 +304,30 @@
 				},
 				{
 					"buffer": 2,
-					"file": "/C/Users/CPPD/Desktop/test.py",
+					"file": "/C/Users/CPPD/Desktop/gui.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 98,
+						"buffer_size": 3059,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								46,
-								46
+								3020,
+								3020
 							]
 						],
 						"settings":
 						{
-							"auto_name": "",
 							"syntax": "Packages/Python/Python.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 961.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "librarika.sublime-project",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 45,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								45,
-								45
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 36.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
 					"type": "text"
 				}
 			]
@@ -382,7 +366,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 325.0
+		"height": 225.0
 	},
 	"output.find_results":
 	{
@@ -429,7 +413,7 @@
 	"show_minimap": false,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": false,
+	"side_bar_visible": true,
 	"side_bar_width": 177.0,
 	"status_bar_visible": true,
 	"template_settings":
