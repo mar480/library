@@ -36,8 +36,8 @@ def connect():
 	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
 	
 	#login credentials
-	username = 'admin@cppd.co.uk'
-	password = 'august1961'
+	username = ''
+	password = ''
 
 
 	#enters login credentials and clicks OK
