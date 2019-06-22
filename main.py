@@ -64,8 +64,8 @@ def reserve():
 	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
 	logging.info('Connecting to Librarika')
 	#login credentials
-	username = 'admin@cppd.co.uk'
-	password = 'august1961'
+	username = ''
+	password = ''
 
 
 	#enters login credentials and clicks OK
@@ -135,8 +135,8 @@ def issue():
 	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
 	logging.info('Connecting to Librarika')
 	#login credentials
-	username = 'admin@cppd.co.uk'
-	password = 'august1961'
+	username = ''
+	password = ''
 
 
 	#enters login credentials and clicks OK
@@ -202,8 +202,8 @@ def printReceipts():
 	browser.get("https://cppdlibrary.librarika.com/users/dashboard")
 	logging.info('Connecting to Librarika')
 	#login credentials
-	username = 'admin@cppd.co.uk'
-	password = 'august1961'
+	username = ''
+	password = ''
 
 
 	#enters login credentials and clicks OK
